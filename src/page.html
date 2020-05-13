@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <!-- import CSS -->
+  <link rel="stylesheet" href="./../css/element.css">
+  <!-- <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css"> -->
+</head>
+<body>
+  <div id="app" style="display: flex;flex-direction: row;width: 100%;">
+    <div id="appList" style="width: 300px;">
+		<el-radio-group class="NotelistBtn" v-model="tabPosition" 
+							style="margin-bottom: 30px;display: flex;flex-direction: row;">
+			<el-dropdown @command="handleCommand1" placement="top-end" size="small" >
+				<el-button type="primary">
+				笔记<i class="el-icon-arrow-down el-icon--right"></i>
+				</el-button>
+				
+				<el-dropdown-menu slot="dropdown" placement="top-end">
+					<el-dropdown-item command="addNoteTitle">
+						新建笔记本
+					</el-dropdown-item>
+					<el-dropdown-item command="NewTask">
+						新建任务
+					</el-dropdown-item>
+					<el-dropdown-item command="need开发">
+						待开发
+					</el-dropdown-item>
+				</el-dropdown-menu>
+			</el-dropdown>
+			<el-dropdown @command="handleCommand2" placement="bottom" size="small" >
+				<el-button type="primary">
+				布局方式<i class="el-icon-arrow-down el-icon--right"></i>
+				</el-button>
+				<el-dropdown-menu slot="dropdown">
+					<el-dropdown-item command="top">
+						top
+					</el-dropdown-item>
+					<el-dropdown-item command="right">
+						right
+					</el-dropdown-item>
+					<el-dropdown-item command="left">
+						left
+					</el-dropdown-item>
+				</el-dropdown-menu>
+			</el-dropdown>
+		</el-radio-group>
+			<el-tabs :tab-position="tabPosition" v-model="activeName"  @tab-click="handleClick" id="doctitle" style="max-height: 450px;" >
+				<el-tab-pane v-for="item in notetitle" :name="item._id" :label="item.notename" :key="item.id">
+					<el-scrollbar style="height: 450px;width:fit-content;max-width: 210px; overflow-y: auto; overflow-x: hidden;">
+						<el-table ref="multipleTable" :data="note" highlight-current-row @current-change="handleCurrentChange"
+						:show-header="false" :border="true" @row-contextmenu="handRight" >
+							<el-table-column type="index" width="40">
+							</el-table-column>
+							<el-table-column property="title" label="文章" width="150">
+							</el-table-column>
+						</el-table>
+						<!-- <div style="margin-top: 20px">
+							<el-button @click="setCurrent(note[0])">选中第一行</el-button>
+							<el-button @click="setCurrent()">取消选择</el-button>
+						</div> -->
+					</el-scrollbar>
+				</el-tab-pane>
+			</el-tabs>
+	</div>
+	<div>
+		<div id="editortoolbar" style="border: 1px solid #ccc;">
+		</div>
+		<el-input v-model="articleTitle" placeholder="请输入标题	"></el-input>
+		<div id="editorcontent" style="border: 1px solid #ccc;height: 400px;">
+			<p>编辑器</p>
+		</div>		
+		<el-button v-if="currentRow" @click="updateNote" type="success" round>保存文章</el-button>
+		<el-button v-else @click="addNote" type="success" round>添加文章</el-button>
+
+	</div>
+	<el-dialog title="新建笔记" :visible.sync="dialogFormVisible" width="49%">
+		<el-form :model="form">
+		  <el-form-item label="笔记名称" :label-width="formLabelWidth">
+			<el-input v-model="form.name" autocomplete="off"></el-input>
+		  </el-form-item>
+		  <el-form-item label="笔记类型" :label-width="formLabelWidth">
+			<el-select v-model="form.state" placeholder="请选择笔记类型">
+			  <el-option label="常规笔记" value="常规笔记"></el-option>
+			  <el-option label="任务笔记" value="任务笔记"></el-option>
+			  <el-option label="其他" value="其他"></el-option>
+			</el-select>
+		  </el-form-item>
+		</el-form>
+		<div slot="footer" class="dialog-footer">
+		  <el-button @click="dialogFormVisible = false">取 消</el-button>
+		  <el-button type="primary" @click="closeDialog">确 定</el-button> 
+		</div>
+	  </el-dialog>
+  </div>
+</body>
+
+  <!-- import Vue before Element -->
+  <script src="../js/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="../js/element.js"></script>
+
+  <script src="../js/wangEditor.js"></script>
+
+  <script src="../render/db.js"></script>
+
+  <script src="../render/tool.js"></script>
+
+  <script src="../render/vue.js"></script>
+
+  <script src="../render/page.js"></script>
+  
+  <style>
+	.el-tabs__header.is-left {
+    	max-width: 120px;
+	}
+	.el-tabs__header.is-right {
+    /* max-width: 200px; */
+		max-width: 120px;
+	}
+  </style>
+
+
+
+</html>

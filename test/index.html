@@ -1,0 +1,131 @@
+<!DOCTYPE html>  
+<html>  
+  <head>  
+    <meta charset="UTF-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1">  
+    <title>hello electron quick start</title>  
+    <link rel="stylesheet" type="text/css" href="./libs/element-ui.v2.4.9/theme-chalk/index.css">  
+    <style>  
+        .el-header, .el-footer {  
+          background-color: #B3C0D1;  
+          color: #333;  
+          text-align: center;  
+        }  
+          
+        .el-aside {  
+          background-color: #D3DCE6;  
+          color: #333;  
+        }  
+          
+        .el-main {  
+          /*background-color: #E9EEF3;*/  
+          color: #333;  
+          text-align: center;  
+        }  
+      </style>  
+  </head>  
+  <body>  
+    <div id="app">  
+      <el-container>  
+          <el-header>  
+            <h4>  
+              eletron.js + element-ui + mysql使用示例, by wallimn, 2019-01-27.  
+            </h4>  
+          </el-header>  
+          <el-container>  
+            <el-aside width="200px">Aside</el-aside>  
+            <el-container>  
+              <el-main>  
+                <el-table :data="items" stripe border style="width: 100%">  
+                  <el-table-column prop="id" label="代码" width="60"> </el-table-column>  
+                  <el-table-column prop="name" label="姓名"> </el-table-column>      
+                  <el-table-column label="操作" align="center" width="160">  
+                      <template slot-scope="scope">  
+                          <el-button size="mini" @click="deleteData(scope.$index, scope.row)">删除</el-button>  
+                          <el-button size="mini" @click="showData(scope.$index, scope.row)">查看</el-button>  
+                        </template>  
+                    </el-table-column>                  
+                </el-table>                    
+              </el-main>  
+              <el-footer>  
+                <h5>  
+                  I am using Node.js {{versions.node}}</script>,  
+                  Chromium {{versions.chrome}}</script>,  
+                  and Electron {{versions.electron}}</script>.  
+                </h5>  
+              </el-footer>  
+            </el-container>  
+          </el-container>  
+      </el-container>  
+     
+     
+     
+      <el-dialog :visible.sync="visible" title="详细信息">  
+          <p>代码：{{curRow.id}}</p>  
+          <p>姓名：{{curRow.name}}</p>  
+      </el-dialog>   
+     
+    </div>  
+      
+    <script type="text/javascript" src="../js/vue.js"></script>  
+  
+      <!-- 引入组件库 -->  
+      <script src="../js/element.js"></script>  
+    <script type="text/javascript">  
+      // Vue实例化  
+      var doit = new Vue({  
+        el:'#app',  
+        data: function(){  
+          return {  
+            items:[{id:1,name:'name'}],  
+            visible:false,  
+            curRow:{},  
+            versions:process.versions,  
+            db:require('../render/db.js')  
+          };  
+        },  
+        created:function(){  
+            var self = this;  
+            //var db = require('./db');  
+            self.db.query("select * from t_test",function(err,rows){  
+              if(err){  
+                console.error(err);  
+              }  
+              else{  
+                var len = rows.length;  
+                self.items = [];  
+                for(var i=0; i<len; i++ ){  
+                  self.items.push({id:rows[i].id,name:rows[i].name});  
+                }  
+              }  
+            });  
+        },  
+        methods: {  
+          showData: function(index,row){  
+            this.curRow=row;  
+            this.visible=true;  
+          },  
+          deleteData:function(index,row){  
+            var self = this;  
+            this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {  
+                confirmButtonText: '确定',  
+                cancelButtonText: '取消',  
+                type: 'warning',  
+                callback:function(action){  
+                  if(action==='confirm'){  
+                    //alert('删除');  
+                    self.db.query("delete from t_test where id=?",[row.id],function(err,rows){  
+                      if(!err){  
+                        self.items.splice(index,1);  
+                      }  
+                    });  
+                  }  
+                }  
+              });  
+          }//end of function  
+        }   //end of methods          
+      });  
+     
+    </script>  
+  </body>  
+</html>  

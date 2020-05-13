@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>wangEditor 菜单和编辑器区域分离</title>
+    <style type="text/css">
+        .toolbar {
+            border: 1px solid #ccc;
+        }
+        .text {
+            border: 1px solid #ccc;
+            height: 400px;
+        }
+    </style>
+</head>
+<body>
+    <div id="editortoolbar" style="border: 1px solid #ccc;">
+    </div>
+    <el-input v-model="articleTitle" placeholder="请输入标题	"></el-input>
+    <div id="editorcontent" style="border: 1px solid #ccc;height: 400px;width: 600;">
+        <p>编辑器</p>
+    </div>
+
+    <script type="text/javascript" src="../js/wangEditor.js"></script>
+    <script type="text/javascript">
+        var E = window.wangEditor
+        var editor1 = new E('#editortoolbar', '#editorcontent')  // 两个参数也可以传入 elem 对象，class 选择器
+        editor1.create()
+    </script>
+</body>
+</html>
